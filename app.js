@@ -1,11 +1,15 @@
+const dotenv = require("dotenv");
+dotenv.config();
 const express = require('express');
 const fileUpload = require('express-fileupload');
 const bodyParser = require('body-parser');
 const mysql = require('mysql');
 const path = require('path');
-
 const app = express();
-
+const DB_HOST = process.env.DB_HOST;
+const DB_USER = process.env.DB_USER;
+const DB_PASS = process.env.DB_PASS;
+const DB_NAME = process.env.DB_NAME;
 const playerRoutes = require('./routes/player.routes');
 const homeRoutes = require('./routes/index.routes');
 const port = 2000;
@@ -14,11 +18,12 @@ const port = 2000;
 // create connection to database
 // the mysql.createConnection function takes in a configuration object which contains host, user, password and the database name.
 const db = mysql.createConnection ({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'socka'
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS,
+    database: process.env.DB_NAME
 });
+
 
 // connect to database
 db.connect((err) => {
@@ -28,7 +33,7 @@ db.connect((err) => {
     console.log('Connected to database');
 });
 global.db = db;
-
+//exports.db = db;
 // configure middleware
 app.set('port', process.env.port || port); // set express to use this port
 app.set('views', __dirname + '/views'); // set express to look in this folder to render our view
